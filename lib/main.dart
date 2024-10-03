@@ -25,10 +25,12 @@ class CalculatorHome extends StatefulWidget {
 
 class _CalculatorHomeState extends State<CalculatorHome> {
   String _output = "0";  // Displayed result
-  String _currentNumber = ""; // Stores the current number being entered
-  String _operand = ""; // Stores the selected operator
-  double _num1 = 0;  // First operand
+  String _currentNumber = "";  // Stores the current number being entered
+  String _operand = "";  // Stores the selected operator
+  double _num1 = 0;  // First operand or intermediate result
   double _num2 = 0;  // Second operand
+
+  bool _isOperandSet = false;  // Tracks if an operand has already been set
 
   // Function to handle button presses
   void _buttonPressed(String value) {
@@ -36,17 +38,35 @@ class _CalculatorHomeState extends State<CalculatorHome> {
       if (value == "C") {
         _clear();
       } else if (value == "+" || value == "-" || value == "*" || value == "/") {
-        _operand = value;
-        _num1 = double.parse(_currentNumber);
-        _currentNumber = "";  // Reset for the second operand
+        _setOperand(value);
       } else if (value == "=") {
         _num2 = double.parse(_currentNumber);
         _calculate();
       } else {
-        _currentNumber += value;
-        _output = _currentNumber;  // Update display
+        _addToCurrentNumber(value);
       }
     });
+  }
+
+  // Function to set the operand and handle continuous operations
+  void _setOperand(String value) {
+    if (_currentNumber.isNotEmpty) {
+      if (_isOperandSet) {
+        _num2 = double.parse(_currentNumber);
+        _calculate();  // Calculate intermediate result
+      } else {
+        _num1 = double.parse(_currentNumber);
+      }
+    }
+    _operand = value;
+    _currentNumber = "";  // Reset current number
+    _isOperandSet = true;  // Operand is set, awaiting next number
+  }
+
+  // Function to add number to current input
+  void _addToCurrentNumber(String value) {
+    _currentNumber += value;
+    _output = _currentNumber;  // Update display
   }
 
   // Function to calculate the result based on the selected operator
@@ -63,13 +83,15 @@ class _CalculatorHomeState extends State<CalculatorHome> {
         result = _num1 * _num2;
         break;
       case "/":
-        result = _num2 != 0 ? _num1 / _num2 : double.nan; // Handle divide by zero
+        result = _num2 != 0 ? _num1 / _num2 : double.nan;  // Handle divide by zero
         break;
       default:
-        result = 0;
+        result = _num1;
     }
     _output = result.toString();
-    _currentNumber = "";  // Reset the current number
+    _num1 = result;  // Store result as the new first operand
+    _currentNumber = "";  // Reset the current number for next input
+    _isOperandSet = false;  // Operand is now unset
   }
 
   // Function to clear/reset the calculator
@@ -79,6 +101,7 @@ class _CalculatorHomeState extends State<CalculatorHome> {
     _num1 = 0;
     _num2 = 0;
     _operand = "";
+    _isOperandSet = false;
   }
 
   // Widget for calculator buttons with color themes
