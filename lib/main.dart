@@ -25,14 +25,14 @@ class CalculatorHome extends StatefulWidget {
 
 class _CalculatorHomeState extends State<CalculatorHome> {
   String _output = "0";  // Displayed result
-  String _currentNumber = "";  // Stores the current number being entered
-  String _operand = "";  // Stores the selected operator
-  double _num1 = 0;  // First operand or intermediate result
-  double _num2 = 0;  // Second operand
+  String _currentNumber = "";  
+  String _operand = "";  
+  double _num1 = 0;  // First number or intermediate result
+  double _num2 = 0;  // Second number
 
-  bool _isOperandSet = false;  // Tracks if an operand has already been set
+  bool _isOperandSet = false;  // Tracks if a number has already been set
 
-  // Function to handle button presses
+ 
   void _buttonPressed(String value) {
     setState(() {
       if (value == "C") {
@@ -48,7 +48,7 @@ class _CalculatorHomeState extends State<CalculatorHome> {
     });
   }
 
-  // Function to set the operand and handle continuous operations
+
   void _setOperand(String value) {
     if (_currentNumber.isNotEmpty) {
       if (_isOperandSet) {
@@ -63,13 +63,13 @@ class _CalculatorHomeState extends State<CalculatorHome> {
     _isOperandSet = true;  // Operand is set, awaiting next number
   }
 
-  // Function to add number to current input
+
   void _addToCurrentNumber(String value) {
     _currentNumber += value;
-    _output = _currentNumber;  // Update display
+    _output = _currentNumber; 
   }
 
-  // Function to calculate the result based on the selected operator
+
   void _calculate() {
     double result;
     switch (_operand) {
@@ -89,12 +89,12 @@ class _CalculatorHomeState extends State<CalculatorHome> {
         result = _num1;
     }
     _output = result.toString();
-    _num1 = result;  // Store result as the new first operand
-    _currentNumber = "";  // Reset the current number for next input
-    _isOperandSet = false;  // Operand is now unset
+    _num1 = result; 
+    _currentNumber = "";  
+    _isOperandSet = false;  
   }
 
-  // Function to clear/reset the calculator
+
   void _clear() {
     _output = "0";
     _currentNumber = "";
@@ -104,7 +104,6 @@ class _CalculatorHomeState extends State<CalculatorHome> {
     _isOperandSet = false;
   }
 
-  // Widget for calculator buttons with color themes
   Widget _buildButton(String value, {Color backgroundColor = const Color.fromARGB(210, 117, 113, 113), Color textColor = Colors.white}) {
     return Expanded(
       child: InkWell(
